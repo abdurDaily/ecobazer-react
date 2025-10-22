@@ -1,46 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Search = () => {
+    const [search, setSearch] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    let [search,setSearch] = useState('');
-      let [searchResult, setSearchResult] = useState(null);
+    // Debounced search effect
+    useEffect(() => {
+        if (search.trim() === '') {
+            setSearchResult([]);
+            return;
+        }
 
-    let searchHandler = (e) => {
-        setSearch(e.target.value)
+        setLoading(true);
+        const timeoutId = setTimeout(() => {
+            fetch(`https://dummyjson.com/products/search?q=${search}`)
+                .then(res => res.json())
+                .then((data) => {
+                    setSearchResult(data.products || []);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error fetching:', error);
+                    setLoading(false);
+                });
+        }, 500); // Wait 500ms after user stops typing
 
-        fetch(`https://dummyjson.com/products/search?q=${search}`)
-        .then(res => res.json())
-        .then((data)=>setSearchResult(data.products));
-        console.log(searchResult);
-        
-
-        
-    }
+        return () => clearTimeout(timeoutId);
+    }, [search]);
 
     return (
-        <div className='fixed backdrop-blur-lg w-[100%] h-full top-0'>
-             <div className="search-header  flex justify-center p-5">
-                <input onChange={(e)=>{searchHandler(e)}} type="search" className='border-0  outline-0 border-b-3 min-w-xl border-b-green-300 pb-3' placeholder="search product" />
-             </div>
-             <div className="search-body">
-                <div className="container">
-                     <h1 className='text-3xl text-gren-gray-scale-500 capitalize font-bold'>Search Results</h1>
+        <div className='fixed backdrop-blur-lg w-full h-full top-0 overflow-y-auto'>
+            <div className="search-header flex justify-center p-5">
+                <input 
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
+                    type="search" 
+                    className='border-0 outline-0 border-b-2 min-w-xl border-b-green-300 pb-3 bg-transparent text-white' 
+                    placeholder="search product" 
+                />
+            </div>
+            <div className="search-body p-5">
+                <div className="container mx-auto">
+                    <h1 className='text-3xl text-gray-500 capitalize font-bold'>
+                        Search Results {searchResult.length > 0 && `(${searchResult.length})`}
+                    </h1>
 
-                     <div className="grid lg:grid-cols-8 gap-5 mt-5">
-                       
-                    
+                    {loading && <p className="text-white mt-5">Loading...</p>}
 
-                        <div className='bg-white shadow-lg col-span-2 p-5 rounded'>
-                            <h4 className='text-2xl font-light'>Product Title</h4>
-                            <img src="https://cdn.dummyjson.com/product-images/beauty/powder-canister/1.webp" alt="product image" />
-                            <p>comment</p>
-                            <b> $ price</b>
-                        </div>
+                    {!loading && search && searchResult.length === 0 && (
+                        <p className="text-white mt-5">No products found</p>
+                    )}
 
-                        
-                     </div>
+                    <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 mt-5">
+                        {searchResult.map((product) => (
+                            <div key={product.id} className='bg-white shadow-lg p-5 rounded'>
+                                <h4 className='text-xl font-semibold mb-2 truncate'>{product.title}</h4>
+                                <img 
+                                    src={product.thumbnail} 
+                                    alt={product.title}
+                                    className='w-full h-48 object-cover rounded mb-3'
+                                />
+                                <p className='text-sm text-gray-600 mb-2 line-clamp-2'>{product.description}</p>
+                                <b className='text-lg text-green-600'>${product.price}</b>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-             </div>
+            </div>
         </div>
     );
 };
