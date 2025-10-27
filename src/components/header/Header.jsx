@@ -14,7 +14,7 @@ let dropdown_2 = [
 
 const Header = () => {
   return (
-    <div className="bg-gren-gray-scale-50">
+    <div className="bg-gren-gray-scale-50 hidden lg:block">
       <div className="container grid grid-cols-2">
 
 

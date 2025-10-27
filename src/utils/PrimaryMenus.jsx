@@ -21,7 +21,7 @@ const PrimaryMenus = () => {
 
     return (
         <div>
-             <ul className='flex gap-4'>
+             <ul className='lg:flex gap-4 px-5 lg:px-0'>
                 {
                     menus.map((menu,index)=>{
                         return(
@@ -29,11 +29,11 @@ const PrimaryMenus = () => {
                                 <NavLink className='flex  py-[20px] items-center gap-1 text-[14px] text-gray-scale-gray--500'> {menu.title} {menu.subMenu && <span><IoIosArrowDown /></span>} </NavLink>                        
                                 {
                                     menu.subMenu && (
-                                        <ul className='bg-white group-hover:mt-[0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-branding-success/10 mt-[50px] shadow-lg absolute left-0 w-[150px] '>
+                                        <ul className='bg-white w-full z-4 group-hover:mt-[0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border border-branding-success/10 mt-[50px] shadow-lg absolute left-0 lg:w-[150px] '>
                                            {
                                             menu.subMenu.map((sumMenu, index)=>{
                                                 return(
-                                                    <li key={index}> <NavLink className="py-3 px-5 inline-block text-[14px] text-gray-scale-gray--500 capitalize hover:text-branding-success hover:ml-[10px] transition-all duration-200"> {sumMenu.title} </NavLink> </li>
+                                                    <li key={index}> <NavLink className="py-3 px-5 inline-block text-[14px] w-[100%]  text-gray-scale-gray--500 capitalize hover:text-branding-success hover:ml-[10px] transition-all duration-200"> {sumMenu.title} </NavLink> </li>
                                                 )
                                             })
                                            }
