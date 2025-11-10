@@ -31,7 +31,7 @@ const Search = ({closeSearch}) => {
   }, [search]);
 
   return (
-    <div className="fixed backdrop-blur-lg w-full h-full top-0 overflow-y-auto">
+    <div className="fixed z-20 backdrop-blur-lg w-full h-full top-0 overflow-y-auto">
       <div onClick={closeSearch} className="absolute right-[20px] top-[10px] w-[40px] h-[40px] border border-green-300 flex items-center justify-center text-green-400 font-bold text-2xl cursor-pointer ">
         <IoCloseSharp />
       </div>
